@@ -452,18 +452,13 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>guarda previsões diarias</from>
-      <to>Merge join</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
       <from>tranformação string-json</from>
       <to>Merge join</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Merge join</from>
-      <to>JSON output</to>
+      <to>Join vários ficheiros</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -559,8 +554,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>352</yloc>
+      <xloc>112</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -577,13 +572,13 @@
     </partitioning>
     <outputValue>outputValue</outputValue>
     <jsonBloc>data</jsonBloc>
-    <nrRowsInBloc>1</nrRowsInBloc>
+    <nrRowsInBloc>1000</nrRowsInBloc>
     <operation_type>writetofile</operation_type>
     <compatibility_mode>N</compatibility_mode>
     <encoding/>
     <addtoresult>N</addtoresult>
     <file>
-      <name>${Internal.Entry.Current.Directory}/output/teste</name>
+      <name>${Internal.Entry.Current.Directory}/output/previsoes_diarias</name>
       <extention>json</extention>
       <append>N</append>
       <split>N</split>
@@ -621,8 +616,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>464</xloc>
-      <yloc>368</yloc>
+      <xloc>256</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -770,8 +765,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>256</yloc>
+      <xloc>128</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -854,8 +849,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>288</xloc>
-      <yloc>368</yloc>
+      <xloc>256</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -890,13 +885,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
-      <yloc>256</yloc>
+      <xloc>400</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>JSON output</name>
+    <name>Join vários ficheiros</name>
     <type>JsonOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -908,7 +903,7 @@
     </partitioning>
     <outputValue>outputValue</outputValue>
     <jsonBloc>data</jsonBloc>
-    <nrRowsInBloc>1</nrRowsInBloc>
+    <nrRowsInBloc>1000</nrRowsInBloc>
     <operation_type>writetofile</operation_type>
     <compatibility_mode>N</compatibility_mode>
     <encoding>UTF-8</encoding>
@@ -972,8 +967,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>752</xloc>
-      <yloc>240</yloc>
+      <xloc>448</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
