@@ -483,10 +483,79 @@
     </hop>
     <hop>
       <from>Json Portugal</from>
-      <to>XML output</to>
+      <to>XML Portugal</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Json Portugal</from>
+      <to>Copy rows to result</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Json Portugal</from>
+      <to>Modified JavaScript value</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Modified JavaScript value</from>
+      <to>agrupa xml</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>agrupa xml</from>
+      <to>Modified JavaScript value 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Modified JavaScript value 2</from>
+      <to>Text file output</to>
       <enabled>Y</enabled>
     </hop>
   </order>
+  <step>
+    <name>Filtra Portugal</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Json Portugal</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>Pais</leftvalue>
+        <function>=</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>Portugal</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask/>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>32</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Join vários ficheiros</name>
     <type>JsonOutput</type>
@@ -586,6 +655,100 @@
     </GUI>
   </step>
   <step>
+    <name>Json Portugal</name>
+    <type>JsonOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <outputValue>outputValue</outputValue>
+    <jsonBloc>data</jsonBloc>
+    <nrRowsInBloc>1000</nrRowsInBloc>
+    <operation_type>writetofile</operation_type>
+    <compatibility_mode>N</compatibility_mode>
+    <encoding>UTF-8</encoding>
+    <addtoresult>N</addtoresult>
+    <file>
+      <name>${Internal.Entry.Current.Directory}/output/portugal</name>
+      <extention>json</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <create_parent_folder>N</create_parent_folder>
+      <DoNotOpenNewFileInit>N</DoNotOpenNewFileInit>
+      <servlet_output>N</servlet_output>
+    </file>
+    <fields>
+      <field>
+        <name>Cidade</name>
+        <element>Cidade</element>
+      </field>
+      <field>
+        <name>LocalTime</name>
+        <element>LocalTime</element>
+      </field>
+      <field>
+        <name>TempAtual</name>
+        <element>TempAtual</element>
+      </field>
+      <field>
+        <name>CondicaoAtual</name>
+        <element>CondicaoAtual</element>
+      </field>
+      <field>
+        <name>HumidadeAtual</name>
+        <element>HumidadeAtual</element>
+      </field>
+      <field>
+        <name>VelocidadeVento</name>
+        <element>VelocidadeVento</element>
+      </field>
+      <field>
+        <name>data</name>
+        <element>data</element>
+      </field>
+      <field>
+        <name>temp_media_c</name>
+        <element>temp_media_c</element>
+      </field>
+      <field>
+        <name>max_vento_kph</name>
+        <element>max_vento_kph</element>
+      </field>
+      <field>
+        <name>previsao</name>
+        <element>previsao</element>
+      </field>
+      <field>
+        <name>humidade_media</name>
+        <element>humidade_media</element>
+      </field>
+      <field>
+        <name>chance_chuva</name>
+        <element>chance_chuva</element>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>992</xloc>
+      <yloc>32</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Merge join</name>
     <type>MergeJoin</type>
     <description/>
@@ -615,6 +778,424 @@
     </remotesteps>
     <GUI>
       <xloc>496</xloc>
+      <yloc>32</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Microsoft Excel writer</name>
+    <type>TypeExitExcelWriterStep</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <header>Y</header>
+    <footer>N</footer>
+    <makeSheetActive>Y</makeSheetActive>
+    <startingCell>A1</startingCell>
+    <appendOmitHeader>N</appendOmitHeader>
+    <appendOffset>0</appendOffset>
+    <appendEmpty>0</appendEmpty>
+    <rowWritingMethod>overwrite</rowWritingMethod>
+    <forceFormulaRecalculation>N</forceFormulaRecalculation>
+    <leaveExistingStylesUnchanged>N</leaveExistingStylesUnchanged>
+    <appendLines>N</appendLines>
+    <add_to_result_filenames>Y</add_to_result_filenames>
+    <file>
+      <name>${Internal.Entry.Current.Directory}/output/csv_previsões</name>
+      <extention>xls</extention>
+      <do_not_open_newfile_init>N</do_not_open_newfile_init>
+      <split>N</split>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <sheetname>Sheet1</sheetname>
+      <autosizecolums>N</autosizecolums>
+      <stream_data>N</stream_data>
+      <protect_sheet>N</protect_sheet>
+      <password>Encrypted </password>
+      <protected_by/>
+      <splitevery>0</splitevery>
+      <if_file_exists>new</if_file_exists>
+      <if_sheet_exists>new</if_sheet_exists>
+    </file>
+    <template>
+      <enabled>N</enabled>
+      <sheet_enabled>N</sheet_enabled>
+      <filename>template.xls</filename>
+      <sheetname/>
+      <hidden>N</hidden>
+    </template>
+    <fields>
+      <field>
+        <name>Cidade</name>
+        <type>String</type>
+        <format/>
+        <title>Cidade</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>Pais</name>
+        <type>String</type>
+        <format/>
+        <title>Pais</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>data</name>
+        <type>String</type>
+        <format/>
+        <title>data</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>temp_media_c</name>
+        <type>Number</type>
+        <format/>
+        <title>temp_media_c</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>max_vento_kph</name>
+        <type>Number</type>
+        <format/>
+        <title>max_vento_kph</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>previsao</name>
+        <type>String</type>
+        <format/>
+        <title>previsao</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>humidade_media</name>
+        <type>Number</type>
+        <format/>
+        <title>humidade_media</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>chance_chuva</name>
+        <type>Number</type>
+        <format/>
+        <title>chance_chuva</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sort atual</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>Cidade</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>288</xloc>
+      <yloc>32</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>XML Portugal</name>
+    <type>XMLOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <encoding>UTF-8</encoding>
+    <name_space/>
+    <xml_main_element>cidades</xml_main_element>
+    <xml_repeat_element>cidades</xml_repeat_element>
+    <file>
+      <name>${Internal.Entry.Current.Directory}/output/portugal_xml.xml</name>
+      <extention>xml</extention>
+      <servlet_output>N</servlet_output>
+      <do_not_open_newfile_init>N</do_not_open_newfile_init>
+      <split>N</split>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <omit_null_values>N</omit_null_values>
+      <date_time_format/>
+      <add_to_result_filenames>N</add_to_result_filenames>
+      <zipped>N</zipped>
+      <splitevery>0</splitevery>
+    </file>
+    <fields>
+      <field>
+        <content_type>Element</content_type>
+        <name>Cidade</name>
+        <element/>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>Pais</name>
+        <element/>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>data</name>
+        <element/>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>temp_media_c</name>
+        <element/>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>max_vento_kph</name>
+        <element/>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>previsao</name>
+        <element/>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>humidade_media</name>
+        <element/>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>chance_chuva</name>
+        <element/>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>LocalTime</name>
+        <element/>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>TempAtual</name>
+        <element/>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>CondicaoAtual</name>
+        <element/>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>HumidadeAtual</name>
+        <element/>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <content_type>Element</content_type>
+        <name>VelocidadeVento</name>
+        <element/>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1152</xloc>
       <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
@@ -711,8 +1292,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>128</yloc>
+      <xloc>128</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1074,14 +1655,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
+      <xloc>288</xloc>
       <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Filtra Portugal</name>
-    <type>FilterRows</type>
+    <name>Copy rows to result</name>
+    <type>RowsToResult</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1090,25 +1671,6 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Json Portugal</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>Pais</leftvalue>
-        <function>=</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>String</type>
-          <text>Portugal</text>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>N</isnull>
-          <mask/>
-        </value>
-      </condition>
-    </compare>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1118,14 +1680,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>816</xloc>
-      <yloc>32</yloc>
+      <xloc>880</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Json Portugal</name>
-    <type>JsonOutput</type>
+    <name>Text file output</name>
+    <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1134,73 +1696,48 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <outputValue>outputValue</outputValue>
-    <jsonBloc>data</jsonBloc>
-    <nrRowsInBloc>1000</nrRowsInBloc>
-    <operation_type>writetofile</operation_type>
-    <compatibility_mode>N</compatibility_mode>
+    <separator/>
+    <enclosure/>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
     <encoding>UTF-8</encoding>
-    <addtoresult>N</addtoresult>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>${Internal.Entry.Current.Directory}/output/portugal</name>
-      <extention>json</extention>
+      <name>${Internal.Entry.Current.Directory}/output/portugal_xml.xml</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>xml</extention>
       <append>N</append>
       <split>N</split>
       <haspartno>N</haspartno>
       <add_date>N</add_date>
       <add_time>N</add_time>
-      <create_parent_folder>N</create_parent_folder>
-      <DoNotOpenNewFileInit>N</DoNotOpenNewFileInit>
-      <servlet_output>N</servlet_output>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
     </file>
     <fields>
       <field>
-        <name>Cidade</name>
-        <element>Cidade</element>
-      </field>
-      <field>
-        <name>LocalTime</name>
-        <element>LocalTime</element>
-      </field>
-      <field>
-        <name>TempAtual</name>
-        <element>TempAtual</element>
-      </field>
-      <field>
-        <name>CondicaoAtual</name>
-        <element>CondicaoAtual</element>
-      </field>
-      <field>
-        <name>HumidadeAtual</name>
-        <element>HumidadeAtual</element>
-      </field>
-      <field>
-        <name>VelocidadeVento</name>
-        <element>VelocidadeVento</element>
-      </field>
-      <field>
-        <name>data</name>
-        <element>data</element>
-      </field>
-      <field>
-        <name>temp_media_c</name>
-        <element>temp_media_c</element>
-      </field>
-      <field>
-        <name>max_vento_kph</name>
-        <element>max_vento_kph</element>
-      </field>
-      <field>
-        <name>previsao</name>
-        <element>previsao</element>
-      </field>
-      <field>
-        <name>humidade_media</name>
-        <element>humidade_media</element>
-      </field>
-      <field>
-        <name>chance_chuva</name>
-        <element>chance_chuva</element>
+        <name>cidade_xml</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
       </field>
     </fields>
     <attributes/>
@@ -1212,14 +1749,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1024</xloc>
-      <yloc>32</yloc>
+      <xloc>848</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Sort atual</name>
-    <type>SortRows</type>
+    <name>Modified JavaScript value</name>
+    <type>ScriptValueMod</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1228,397 +1765,97 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>previsao_xml = '&lt;previsao data="' + data + '">' +
+               '&lt;temp_media>' + temp_media_c + '&lt;/temp_media>' +
+               '&lt;max_vento>' + max_vento_kph + '&lt;/max_vento>' +
+               '&lt;condicao>' + previsao + '&lt;/condicao>' +
+               '&lt;/previsao>\n';</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>previsao_xml</name>
+        <rename>previsao_xml</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1184</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>agrupa xml</name>
+    <type>GroupBy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <all_rows>N</all_rows>
+    <ignore_aggregate>N</ignore_aggregate>
+    <field_ignore/>
     <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
+    <prefix>grp</prefix>
+    <add_linenr>N</add_linenr>
+    <linenr_fieldname/>
+    <give_back_row>N</give_back_row>
+    <group>
       <field>
         <name>Cidade</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>240</xloc>
-      <yloc>64</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Microsoft Excel writer</name>
-    <type>TypeExitExcelWriterStep</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <header>Y</header>
-    <footer>N</footer>
-    <makeSheetActive>Y</makeSheetActive>
-    <startingCell>A1</startingCell>
-    <appendOmitHeader>N</appendOmitHeader>
-    <appendOffset>0</appendOffset>
-    <appendEmpty>0</appendEmpty>
-    <rowWritingMethod>overwrite</rowWritingMethod>
-    <forceFormulaRecalculation>N</forceFormulaRecalculation>
-    <leaveExistingStylesUnchanged>N</leaveExistingStylesUnchanged>
-    <appendLines>N</appendLines>
-    <add_to_result_filenames>Y</add_to_result_filenames>
-    <file>
-      <name>${Internal.Entry.Current.Directory}/output/csv_previsões</name>
-      <extention>xls</extention>
-      <do_not_open_newfile_init>N</do_not_open_newfile_init>
-      <split>N</split>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <sheetname>Sheet1</sheetname>
-      <autosizecolums>N</autosizecolums>
-      <stream_data>N</stream_data>
-      <protect_sheet>N</protect_sheet>
-      <password>Encrypted </password>
-      <protected_by/>
-      <splitevery>0</splitevery>
-      <if_file_exists>new</if_file_exists>
-      <if_sheet_exists>new</if_sheet_exists>
-    </file>
-    <template>
-      <enabled>N</enabled>
-      <sheet_enabled>N</sheet_enabled>
-      <filename>template.xls</filename>
-      <sheetname/>
-      <hidden>N</hidden>
-    </template>
-    <fields>
-      <field>
-        <name>Cidade</name>
-        <type>String</type>
-        <format/>
-        <title>Cidade</title>
-        <titleStyleCell/>
-        <styleCell/>
-        <commentField/>
-        <commentAuthorField/>
-        <formula>N</formula>
-        <hyperlinkField/>
       </field>
       <field>
         <name>Pais</name>
-        <type>String</type>
-        <format/>
-        <title>Pais</title>
-        <titleStyleCell/>
-        <styleCell/>
-        <commentField/>
-        <commentAuthorField/>
-        <formula>N</formula>
-        <hyperlinkField/>
       </field>
       <field>
         <name>data</name>
-        <type>String</type>
-        <format/>
-        <title>data</title>
-        <titleStyleCell/>
-        <styleCell/>
-        <commentField/>
-        <commentAuthorField/>
-        <formula>N</formula>
-        <hyperlinkField/>
       </field>
       <field>
-        <name>temp_media_c</name>
-        <type>Number</type>
-        <format/>
-        <title>temp_media_c</title>
-        <titleStyleCell/>
-        <styleCell/>
-        <commentField/>
-        <commentAuthorField/>
-        <formula>N</formula>
-        <hyperlinkField/>
-      </field>
-      <field>
-        <name>max_vento_kph</name>
-        <type>Number</type>
-        <format/>
-        <title>max_vento_kph</title>
-        <titleStyleCell/>
-        <styleCell/>
-        <commentField/>
-        <commentAuthorField/>
-        <formula>N</formula>
-        <hyperlinkField/>
-      </field>
-      <field>
-        <name>previsao</name>
-        <type>String</type>
-        <format/>
-        <title>previsao</title>
-        <titleStyleCell/>
-        <styleCell/>
-        <commentField/>
-        <commentAuthorField/>
-        <formula>N</formula>
-        <hyperlinkField/>
-      </field>
-      <field>
-        <name>humidade_media</name>
-        <type>Number</type>
-        <format/>
-        <title>humidade_media</title>
-        <titleStyleCell/>
-        <styleCell/>
-        <commentField/>
-        <commentAuthorField/>
-        <formula>N</formula>
-        <hyperlinkField/>
-      </field>
-      <field>
-        <name>chance_chuva</name>
-        <type>Number</type>
-        <format/>
-        <title>chance_chuva</title>
-        <titleStyleCell/>
-        <styleCell/>
-        <commentField/>
-        <commentAuthorField/>
-        <formula>N</formula>
-        <hyperlinkField/>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>416</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>XML output</name>
-    <type>XMLOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <encoding>UTF-8</encoding>
-    <name_space/>
-    <xml_main_element>Rows</xml_main_element>
-    <xml_repeat_element>Row</xml_repeat_element>
-    <file>
-      <name>${Internal.Entry.Current.Directory}/output/portugal_xml.xml</name>
-      <extention>xml</extention>
-      <servlet_output>N</servlet_output>
-      <do_not_open_newfile_init>N</do_not_open_newfile_init>
-      <split>N</split>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <omit_null_values>N</omit_null_values>
-      <date_time_format/>
-      <add_to_result_filenames>N</add_to_result_filenames>
-      <zipped>N</zipped>
-      <splitevery>0</splitevery>
-    </file>
-    <fields>
-      <field>
-        <content_type>Element</content_type>
-        <name>Cidade</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>Pais</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>data</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>temp_media_c</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>max_vento_kph</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>previsao</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>humidade_media</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>chance_chuva</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
         <name>LocalTime</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
       </field>
       <field>
-        <content_type>Element</content_type>
         <name>TempAtual</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
       </field>
       <field>
-        <content_type>Element</content_type>
         <name>CondicaoAtual</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
       </field>
       <field>
-        <content_type>Element</content_type>
         <name>HumidadeAtual</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
       </field>
       <field>
-        <content_type>Element</content_type>
         <name>VelocidadeVento</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
+      </field>
+      <field>
+        <name>previsao_xml</name>
+      </field>
+    </group>
+    <fields>
+      <field>
+        <aggregate>previsoes_concat</aggregate>
+        <subject>previsao_xml</subject>
+        <type>CONCAT_COMMA</type>
+        <valuefield>\n</valuefield>
       </field>
     </fields>
     <attributes/>
@@ -1630,8 +1867,64 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1024</xloc>
-      <yloc>160</yloc>
+      <xloc>1248</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Modified JavaScript value 2</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>cidade_xml = '  &lt;cidade nome="' + Cidade + '" pais="' + Pais + '">\n' +
+             '    &lt;dados_atual>\n' +
+             '      &lt;TempAtual>' + TempAtual + '&lt;/TempAtual>\n' +
+             '      &lt;HumidadeAtual>' + HumidadeAtual + '&lt;/HumidadeAtual>\n' +
+             '      &lt;VelocidadeVento>' + VelocidadeVento + '&lt;/VelocidadeVento>\n' +
+             '      &lt;CondicaoAtual>' + CondicaoAtual + '&lt;/CondicaoAtual>\n' +
+             '      &lt;HoraAtual>' + LocalTime + '&lt;/HoraAtual>\n' +
+             '    &lt;/dados_atual&gt;\n' +
+             '    &lt;previsoes>\n' +
+             previsoes_concat +
+             '    &lt;/previsoes>\n' +
+             '  &lt;/cidade>\n';
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>cidade_xml</name>
+        <rename>cidade_xml</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1072</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
