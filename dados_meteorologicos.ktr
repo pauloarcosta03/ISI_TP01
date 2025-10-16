@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>teste</name>
+    <name>dados meteologicos</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -443,11 +443,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>tranformação string-json</from>
-      <to>guarda previsões diarias</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
       <from>Merge join</from>
       <to>Join vários ficheiros</to>
       <enabled>Y</enabled>
@@ -474,11 +469,11 @@
     </hop>
     <hop>
       <from>tranformação string-json</from>
-      <to>Microsoft Excel writer</to>
+      <to>guarda todas as previsões num excel</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Microsoft Excel writer</from>
+      <from>guarda todas as previsões num excel</from>
       <to>Merge join</to>
       <enabled>Y</enabled>
     </hop>
@@ -503,18 +498,18 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Escrever header</from>
+      <from>Escrever header do xml</from>
       <to>dados no portugal xml</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Cria valores do header e do footer</from>
-      <to>Escrever header</to>
+      <to>Escrever header do xml</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>dados no portugal xml</from>
-      <to>Escreve footer</to>
+      <to>Escreve footer do xml</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -766,7 +761,7 @@
       <schema_name/>
     </partitioning>
     <join_type>INNER</join_type>
-    <step1>Microsoft Excel writer</step1>
+    <step1>guarda todas as previsões num excel</step1>
     <step2>Sort atual</step2>
     <keys_1>
       <key>Cidade</key>
@@ -783,13 +778,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>496</xloc>
+      <xloc>528</xloc>
       <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Microsoft Excel writer</name>
+    <name>guarda todas as previsões num excel</name>
     <type>TypeExitExcelWriterStep</type>
     <description/>
     <distribute>Y</distribute>
@@ -944,7 +939,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>496</xloc>
+      <xloc>528</xloc>
       <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
@@ -992,8 +987,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1184</xloc>
-      <yloc>224</yloc>
+      <xloc>1136</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1018,10 +1013,9 @@
              '    &lt;dados_atual>\n' +
              '      &lt;TempAtual>' + TempAtual + '&lt;/TempAtual>\n' +
              '      &lt;HumidadeAtual>' + HumidadeAtual + '&lt;/HumidadeAtual>\n' +
-             '      &lt;VelocidadeVento>' + VelocidadeVento + '&lt;/VelocidadeVento>\n' +
              '      &lt;CondicaoAtual>' + CondicaoAtual + '&lt;/CondicaoAtual>\n' +
              '      &lt;HoraAtual>' + LocalTime + '&lt;/HoraAtual>\n' +
-             '    &lt;/dados_atual&gt;\n' +
+             '    &lt;/dados_atual>\n' +
              '    &lt;previsoes>\n' +
              previsoes_concat +
              '    &lt;/previsoes>\n' +
@@ -1048,8 +1042,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1072</xloc>
-      <yloc>400</yloc>
+      <xloc>1280</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1159,8 +1153,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>464</xloc>
-      <yloc>400</yloc>
+      <xloc>896</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1191,9 +1185,6 @@
         <name>Pais</name>
       </field>
       <field>
-        <name>data</name>
-      </field>
-      <field>
         <name>LocalTime</name>
       </field>
       <field>
@@ -1205,19 +1196,13 @@
       <field>
         <name>HumidadeAtual</name>
       </field>
-      <field>
-        <name>VelocidadeVento</name>
-      </field>
-      <field>
-        <name>previsao_xml</name>
-      </field>
     </group>
     <fields>
       <field>
         <aggregate>previsoes_concat</aggregate>
         <subject>previsao_xml</subject>
-        <type>CONCAT_COMMA</type>
-        <valuefield>\n</valuefield>
+        <type>CONCAT_STRING</type>
+        <valuefield/>
       </field>
     </fields>
     <attributes/>
@@ -1229,8 +1214,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1248</xloc>
-      <yloc>320</yloc>
+      <xloc>1280</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1328,84 +1313,6 @@
     <GUI>
       <xloc>128</xloc>
       <yloc>144</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>guarda previsões diarias</name>
-    <type>JsonOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <outputValue>outputValue</outputValue>
-    <jsonBloc>data</jsonBloc>
-    <nrRowsInBloc>10000</nrRowsInBloc>
-    <operation_type>writetofile</operation_type>
-    <compatibility_mode>N</compatibility_mode>
-    <encoding/>
-    <addtoresult>N</addtoresult>
-    <file>
-      <name>${Internal.Entry.Current.Directory}/output/previsoes_diarias</name>
-      <extention>json</extention>
-      <append>Y</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <create_parent_folder>N</create_parent_folder>
-      <DoNotOpenNewFileInit>N</DoNotOpenNewFileInit>
-      <servlet_output>N</servlet_output>
-    </file>
-    <fields>
-      <field>
-        <name>Cidade</name>
-        <element>Cidade</element>
-      </field>
-      <field>
-        <name>Pais</name>
-        <element>Pais</element>
-      </field>
-      <field>
-        <name>data</name>
-        <element>data</element>
-      </field>
-      <field>
-        <name>temp_media_c</name>
-        <element>temp_media_c</element>
-      </field>
-      <field>
-        <name>max_vento_kph</name>
-        <element>max_vento_kph</element>
-      </field>
-      <field>
-        <name>previsao</name>
-        <element>previsao</element>
-      </field>
-      <field>
-        <name>humidade_media</name>
-        <element>humidade_media</element>
-      </field>
-      <field>
-        <name>chance_chuva</name>
-        <element>chance_chuva</element>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1728,7 +1635,7 @@ if (linha === 0) {
 
 
 // Só na última linha
-if (linha === total - 1) {
+if (linha === 0) {
   footer = '&lt;/cidades>';
 }
 
@@ -1764,13 +1671,13 @@ linha++;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>960</xloc>
-      <yloc>496</yloc>
+      <xloc>1280</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Escrever header</name>
+    <name>Escrever header do xml</name>
     <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1833,13 +1740,13 @@ linha++;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
-      <yloc>448</yloc>
+      <xloc>1072</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Escreve footer</name>
+    <name>Escreve footer do xml</name>
     <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1902,8 +1809,8 @@ linha++;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>416</yloc>
+      <xloc>720</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
