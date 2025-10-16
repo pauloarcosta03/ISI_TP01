@@ -1,3 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cidades>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <cidade nome="Braga" pais="Portugal">
     <dados_atual>
       <TempAtual>19.2</TempAtual>
@@ -231,4 +251,22 @@
 <previsao data="2025-10-10"><temp_media>20.3</temp_media><max_vento>20.5</max_vento><condicao>Sunny</condicao></previsao>
     </previsoes>
   </cidade>
+
+
+
+
+
+
+
+
+
+
+
+</cidades>
+
+
+
+
+
+
 

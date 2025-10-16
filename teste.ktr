@@ -6,6 +6,7 @@
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -483,32 +484,37 @@
     </hop>
     <hop>
       <from>Json Portugal</from>
-      <to>XML Portugal</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Json Portugal</from>
-      <to>Copy rows to result</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Json Portugal</from>
-      <to>Modified JavaScript value</to>
+      <to>Cria xml cada previsao</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Modified JavaScript value</from>
+      <from>Cria xml cada previsao</from>
       <to>agrupa xml</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>agrupa xml</from>
-      <to>Modified JavaScript value 2</to>
+      <to>Cria xml cada cidade</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Modified JavaScript value 2</from>
-      <to>Text file output</to>
+      <from>Cria xml cada cidade</from>
+      <to>Cria valores do header e do footer</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Escrever header</from>
+      <to>dados no portugal xml</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Cria valores do header e do footer</from>
+      <to>Escrever header</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>dados no portugal xml</from>
+      <to>Escreve footer</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -944,6 +950,110 @@
     </GUI>
   </step>
   <step>
+    <name>Cria xml cada previsao</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>previsao_xml = '&lt;previsao data="' + data + '">' +
+               '&lt;temp_media>' + temp_media_c + '&lt;/temp_media>' +
+               '&lt;max_vento>' + max_vento_kph + '&lt;/max_vento>' +
+               '&lt;condicao>' + previsao + '&lt;/condicao>' +
+               '&lt;/previsao>\n';</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>previsao_xml</name>
+        <rename>previsao_xml</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1184</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Cria xml cada cidade</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>cidade_xml = '  &lt;cidade nome="' + Cidade + '" pais="' + Pais + '">\n' +
+             '    &lt;dados_atual>\n' +
+             '      &lt;TempAtual>' + TempAtual + '&lt;/TempAtual>\n' +
+             '      &lt;HumidadeAtual>' + HumidadeAtual + '&lt;/HumidadeAtual>\n' +
+             '      &lt;VelocidadeVento>' + VelocidadeVento + '&lt;/VelocidadeVento>\n' +
+             '      &lt;CondicaoAtual>' + CondicaoAtual + '&lt;/CondicaoAtual>\n' +
+             '      &lt;HoraAtual>' + LocalTime + '&lt;/HoraAtual>\n' +
+             '    &lt;/dados_atual&gt;\n' +
+             '    &lt;previsoes>\n' +
+             previsoes_concat +
+             '    &lt;/previsoes>\n' +
+             '  &lt;/cidade>\n';
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>cidade_xml</name>
+        <rename>cidade_xml</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1072</xloc>
+      <yloc>400</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Sort atual</name>
     <type>SortRows</type>
     <description/>
@@ -986,8 +1096,8 @@
     </GUI>
   </step>
   <step>
-    <name>XML Portugal</name>
-    <type>XMLOutput</type>
+    <name>dados no portugal xml</name>
+    <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -996,192 +1106,46 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <separator/>
+    <enclosure/>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
     <encoding>UTF-8</encoding>
-    <name_space/>
-    <xml_main_element>cidades</xml_main_element>
-    <xml_repeat_element>cidades</xml_repeat_element>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>${Internal.Entry.Current.Directory}/output/portugal_xml.xml</name>
-      <extention>xml</extention>
+      <name>${Internal.Entry.Current.Directory}/output/portugal_xml</name>
       <servlet_output>N</servlet_output>
-      <do_not_open_newfile_init>N</do_not_open_newfile_init>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>xml</extention>
+      <append>Y</append>
       <split>N</split>
+      <haspartno>N</haspartno>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <omit_null_values>N</omit_null_values>
       <date_time_format/>
-      <add_to_result_filenames>N</add_to_result_filenames>
-      <zipped>N</zipped>
-      <splitevery>0</splitevery>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
     </file>
     <fields>
       <field>
-        <content_type>Element</content_type>
-        <name>Cidade</name>
-        <element/>
+        <name>cidade_xml</name>
         <type>String</type>
         <format/>
         <currency/>
         <decimal/>
         <group/>
         <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>Pais</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>data</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>temp_media_c</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>max_vento_kph</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>previsao</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>humidade_media</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>chance_chuva</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>LocalTime</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>TempAtual</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>CondicaoAtual</name>
-        <element/>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>HumidadeAtual</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <content_type>Element</content_type>
-        <name>VelocidadeVento</name>
-        <element/>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
+        <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
@@ -1195,8 +1159,78 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1152</xloc>
-      <yloc>32</yloc>
+      <xloc>464</xloc>
+      <yloc>400</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>agrupa xml</name>
+    <type>GroupBy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <all_rows>N</all_rows>
+    <ignore_aggregate>N</ignore_aggregate>
+    <field_ignore/>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>grp</prefix>
+    <add_linenr>N</add_linenr>
+    <linenr_fieldname/>
+    <give_back_row>N</give_back_row>
+    <group>
+      <field>
+        <name>Cidade</name>
+      </field>
+      <field>
+        <name>Pais</name>
+      </field>
+      <field>
+        <name>data</name>
+      </field>
+      <field>
+        <name>LocalTime</name>
+      </field>
+      <field>
+        <name>TempAtual</name>
+      </field>
+      <field>
+        <name>CondicaoAtual</name>
+      </field>
+      <field>
+        <name>HumidadeAtual</name>
+      </field>
+      <field>
+        <name>VelocidadeVento</name>
+      </field>
+      <field>
+        <name>previsao_xml</name>
+      </field>
+    </group>
+    <fields>
+      <field>
+        <aggregate>previsoes_concat</aggregate>
+        <subject>previsao_xml</subject>
+        <type>CONCAT_COMMA</type>
+        <valuefield>\n</valuefield>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1248</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1661,8 +1695,8 @@
     </GUI>
   </step>
   <step>
-    <name>Copy rows to result</name>
-    <type>RowsToResult</type>
+    <name>Cria valores do header e do footer</name>
+    <type>ScriptValueMod</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1671,6 +1705,56 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>// Inicialização persistente (só corre 1x)
+if (typeof linha === 'undefined') {
+  linha = 0;
+  total = getInputRowMeta().size(); // Número total de linhas
+}
+
+// Cria header e footer
+var header = '';
+var footer = '';
+
+// Só na primeira linha
+if (linha === 0) {
+  header = '&lt;?xml version="1.0" encoding="UTF-8"?>\n&lt;cidades>\n';
+}
+
+
+// Só na última linha
+if (linha === total - 1) {
+  footer = '&lt;/cidades>';
+}
+
+// Incrementa o contador
+linha++;
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>header</name>
+        <rename>header</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>footer</name>
+        <rename>footer</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1680,13 +1764,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>880</xloc>
-      <yloc>160</yloc>
+      <xloc>960</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Text file output</name>
+    <name>Escrever header</name>
     <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1710,7 +1794,7 @@
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>${Internal.Entry.Current.Directory}/output/portugal_xml.xml</name>
+      <name>${Internal.Entry.Current.Directory}/output/portugal_xml</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>xml</extention>
@@ -1728,7 +1812,7 @@
     </file>
     <fields>
       <field>
-        <name>cidade_xml</name>
+        <name>header</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -1749,182 +1833,77 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>848</xloc>
+      <xloc>688</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Escreve footer</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator/>
+    <enclosure/>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding>UTF-8</encoding>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>${Internal.Entry.Current.Directory}/output/portugal_xml</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>xml</extention>
+      <append>Y</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>footer</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>240</xloc>
       <yloc>416</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Modified JavaScript value</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>previsao_xml = '&lt;previsao data="' + data + '">' +
-               '&lt;temp_media>' + temp_media_c + '&lt;/temp_media>' +
-               '&lt;max_vento>' + max_vento_kph + '&lt;/max_vento>' +
-               '&lt;condicao>' + previsao + '&lt;/condicao>' +
-               '&lt;/previsao>\n';</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>previsao_xml</name>
-        <rename>previsao_xml</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1184</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>agrupa xml</name>
-    <type>GroupBy</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <all_rows>N</all_rows>
-    <ignore_aggregate>N</ignore_aggregate>
-    <field_ignore/>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>grp</prefix>
-    <add_linenr>N</add_linenr>
-    <linenr_fieldname/>
-    <give_back_row>N</give_back_row>
-    <group>
-      <field>
-        <name>Cidade</name>
-      </field>
-      <field>
-        <name>Pais</name>
-      </field>
-      <field>
-        <name>data</name>
-      </field>
-      <field>
-        <name>LocalTime</name>
-      </field>
-      <field>
-        <name>TempAtual</name>
-      </field>
-      <field>
-        <name>CondicaoAtual</name>
-      </field>
-      <field>
-        <name>HumidadeAtual</name>
-      </field>
-      <field>
-        <name>VelocidadeVento</name>
-      </field>
-      <field>
-        <name>previsao_xml</name>
-      </field>
-    </group>
-    <fields>
-      <field>
-        <aggregate>previsoes_concat</aggregate>
-        <subject>previsao_xml</subject>
-        <type>CONCAT_COMMA</type>
-        <valuefield>\n</valuefield>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1248</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Modified JavaScript value 2</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>cidade_xml = '  &lt;cidade nome="' + Cidade + '" pais="' + Pais + '">\n' +
-             '    &lt;dados_atual>\n' +
-             '      &lt;TempAtual>' + TempAtual + '&lt;/TempAtual>\n' +
-             '      &lt;HumidadeAtual>' + HumidadeAtual + '&lt;/HumidadeAtual>\n' +
-             '      &lt;VelocidadeVento>' + VelocidadeVento + '&lt;/VelocidadeVento>\n' +
-             '      &lt;CondicaoAtual>' + CondicaoAtual + '&lt;/CondicaoAtual>\n' +
-             '      &lt;HoraAtual>' + LocalTime + '&lt;/HoraAtual>\n' +
-             '    &lt;/dados_atual&gt;\n' +
-             '    &lt;previsoes>\n' +
-             previsoes_concat +
-             '    &lt;/previsoes>\n' +
-             '  &lt;/cidade>\n';
-</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>cidade_xml</name>
-        <rename>cidade_xml</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1072</xloc>
-      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
